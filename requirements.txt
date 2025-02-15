@@ -1,0 +1,12 @@
+# OpenCV (CPU-Only)
+# For CUDA support, build from source or use the package provided by your GNU/Linux distribution
+#opencv-python
+
+numpy
+scikit-image
+
+# The version provided on PyPi does not work on Linux. 
+# Please use the install script provided in this repo instead.
+#g2o-python
+
+pangolin-tool
