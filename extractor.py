@@ -9,10 +9,18 @@ def add_ones(x):
     return np.concatenate([x, np.ones(x.shape[0], 1)], axis=1)
 
 
-def normalize(Kinv, pts):
+def normalize_points(Kinv, pts):
     # The inverse camera matrix K^(-1) transforms 2D homogenous points
     # from pixel coordinates to normalized image coordinates.
     return np.dot(Kinv, add_ones(pts).T).T[:, 0:2]
+
+
+def denormalize_point(K, pt):
+    # Converts a normalized point to pixel coordinates by
+    # the Camera Matrix and normalizing the result
+    ret = np.dot(K, [pt[0], pt[1], 1.0])
+    ret /= ret[2]
+    return int(round(ret[0])), int(round(ret[1]))
 
 
 def extract(img):
@@ -95,4 +103,4 @@ class Frame(object):
         pts, self.des = extract(img)
 
         # Normalize the feature points using the inverse camera matrix
-        self.pts = normalize(self.Kinv, pts)
+        self.pts = normalize_points(self.Kinv, pts)
