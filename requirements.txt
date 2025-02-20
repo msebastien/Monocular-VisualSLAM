@@ -1,6 +1,7 @@
 # OpenCV (CPU-Only)
 # For CUDA support, build from source or use the package provided by your GNU/Linux distribution
-#opencv-python
+opencv-python
+opencv-contrib-python
 
 numpy
 scikit-image
