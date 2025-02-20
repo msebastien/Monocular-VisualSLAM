@@ -10,14 +10,14 @@ def add_ones(x):
 
 
 def normalize_points(Kinv, pts):
-    # The inverse camera matrix K^(-1) transforms 2D homogenous points
+    # The inverse Intrinsic Matrix K^(-1) transforms 2D homogenous points
     # from pixel coordinates to normalized image coordinates.
     return np.dot(Kinv, add_ones(pts).T).T[:, 0:2]
 
 
 def denormalize_point(K, pt):
     # Converts a normalized point to pixel coordinates by
-    # the Camera Matrix and normalizing the result
+    # the Intrinsic Matrix and normalizing the result
     ret = np.dot(K, [pt[0], pt[1], 1.0])
     ret /= ret[2]
     return int(round(ret[0])), int(round(ret[1]))
@@ -89,10 +89,12 @@ def match_frames(f1, f2):
 
 
 class Frame(object):
-
     def __init__(self, mapp, img, K):
-        self.K = K  # Camera Matrix (Intrinsic parameters)
-        self.Kinv = np.linalg.inv(self.K)  # Inverse of the Camera Matrix
+        # Intrinsic Matrix (used to determine P, the Camera Matrix)
+        # Camera pose Matrix P = K[R|t], with [R|t] the Extrinsic Matrix
+        self.K = K
+        self.Kinv = np.linalg.inv(self.K)  # Inverse of the Intrinsic Matrix
+        
         # Initial pose of the frame (assuming IRt is predefined)
         # self.pose = IRt
 
