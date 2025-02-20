@@ -22,7 +22,10 @@ def extract(img):
 
     # Detection
     pts = cv2.goodFeaturesToTrack(
-        np.mean(img, axis=-1).astype(np.uint8), 1000, qualityLevel=0.01, minDistance=10
+        np.mean(img, axis=-1).astype(np.uint8),
+        maxCorners=1000,
+        qualityLevel=0.01,
+        minDistance=10,
     )
 
     # Extraction
