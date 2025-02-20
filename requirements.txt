@@ -5,9 +5,14 @@ opencv-contrib-python
 
 numpy
 scikit-image
+pangolin-tool
+
+# SDL2
+pysdl2
+pysdl2-dll
 
 # The version provided on PyPi does not work on Linux. 
 # Please use the install script provided in this repo instead.
 #g2o-python
 
-pangolin-tool
+
