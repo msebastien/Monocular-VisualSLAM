@@ -72,6 +72,7 @@ def match_frames(f1, f2):
     idx2 = np.array(idx2)
 
     # Fit matrix
+    # Compute the Fundamental Matrix using RANSAC
     model, inliers = ransac(
         ret[:, 0],
         ret[:, 1],
@@ -80,12 +81,68 @@ def match_frames(f1, f2):
         residual_threshold=0.005,
         max_trials=200,
     )
+    F = model.params
 
     # Ignore outliers
     ret = ret[inliers]
-    # Rt = extract_pose(model.params)
 
-    return idx1[inliers], idx2[inliers]  # , Rt
+    # Notes:
+    # OpenCV also allows to find R and t by decomposing the Essential matrix
+    # using the cv2.recoverPose() method.
+    # But, we need first to compute the Essential matrix using
+    # the Intrinsic matrix and its inverse as well as the Fundamental matrix
+    # Camera intrinsic parameters (replace with camera's calibration data)
+    # K = np.array([[fx, 0, cx],
+    #               [0, fy, cy],
+    #               [0, 0, 1]])
+    # Essential Matrix
+    # E = K.T @ F @ K
+    # Then, we can use OpenCV's builtin method.
+    # _, R, t, mask = cv2.recoverPose(E, pts1_inliers, pts2_inliers, K)
+    # R and t can be concatenated to get a single [R|t] matrix
+
+    # Decompose directly the Fundamental matrix to get R and t
+    Rt = extract_pose(F)
+
+    return idx1[inliers], idx2[inliers], Rt
+
+
+def extract_pose(F):
+    # Define the W matrix for computing the Rotation matrix
+    W = np.mat([0, -1, 0], [1, 0, 0], [0, 0, 1])
+
+    # Perform Singular Value Decomposition (SVD) on the Fundamental matrix F
+    U, d, Vt = np.linalg.svd(F)
+    assert np.linalg.det(U) > 0
+
+    # Correct Vt if its determinant is negative
+    # to ensure it's a proper rotation matrix
+    if np.linalg.det(Vt) < 0:
+        Vt *= -1
+
+    # Compute the initial rotation matrix R using U, W and Vt
+    R = np.dot(np.dot(U, W), Vt)
+
+    # Check the diagonal sum of R to ensure it's a proper rotation matrix
+    # If not, recompute R using the transpose of W
+    if np.sum(R.diagonal()) < 0:
+        R = np.dot(np.dot(U, W.T), Vt)
+
+    # Extract the translation vector t from the third column of U
+    t = U[:, 2]
+
+    # Pose matrix [R|t]
+    # Initialize a 4x4 identity matrix to store the pose
+    ret = np.eye(4)
+    # Set the top-left 3x3 submatrix to the rotation matrix R
+    ret[:3, :3] = R
+    # Set the top-right 3x1 submatrix to the translation vector t
+    ret[:3, 3] = t
+
+    print(d)
+
+    # Return the 4x4 homogenous transformation matrix representing the pose
+    return ret
 
 
 class Frame(object):
@@ -94,7 +151,7 @@ class Frame(object):
         # Camera pose Matrix P = K[R|t], with [R|t] the Extrinsic Matrix
         self.K = K
         self.Kinv = np.linalg.inv(self.K)  # Inverse of the Intrinsic Matrix
-        
+
         # Initial pose of the frame (assuming IRt is predefined)
         # self.pose = IRt
 
