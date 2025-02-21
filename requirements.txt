@@ -7,6 +7,10 @@ numpy
 scikit-image
 pangolin-tool
 
+# OpenGL
+pyopengl
+pyopengl-accelerate
+
 # SDL2
 pysdl2
 pysdl2-dll
