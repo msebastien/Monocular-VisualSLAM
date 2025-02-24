@@ -6,9 +6,9 @@ IS_VENV_INITIALIZED=false
 # Checks if there is a python virtual environment and activate it
 check_python_venv () {
     if [ -d "$1"/.venv ]; then
-        echo "A Python virtual environment has already been created. Activate it."
+        echo -n "A Python virtual environment has already been created. Activate it."
     else
-        echo "No Python virtual environment. A new one will be created."
+        echo -n "No Python virtual environment. A new one will be created."
         python3 -m venv .venv --system-site-packages
     fi
 
@@ -20,7 +20,7 @@ check_python_venv () {
 
 install_g2o () {
     cd $HOME
-    echo "==> Start running g2o-python library install script..."
+    echo -n "==> Start running g2o-python library install script..."
 
     # Clone g2o-python repo without its forked and outdated g2o git submodule
     git clone --no-remote-submodules https://github.com/miquelmassot/g2o-python
@@ -47,14 +47,14 @@ install_g2o () {
     rm -rf "$HOME"/g2o
     rm -rf "$HOME"/g2o-python
 
-    echo "==========================================================================\n"
-    echo "|   The g2o-python library install script has completed its execution.   |\n"
-    echo "=========================================================================="
+    printf "==========================================================================\n"
+    printf "|   The g2o-python library install script has completed its execution.   |\n"
+    printf "=========================================================================="
 }
 
 install_pangolin () {
     cd $HOME
-    echo "==> Start running pangolin vizualisation library install script..."
+    echo -n "==> Start running pangolin vizualisation library install script..."
 
     git clone https://github.com/uoip/pangolin.git
     
@@ -80,9 +80,9 @@ install_pangolin () {
     # Clean git repo and build files
     rm -rf "$HOME"/pangolin
 
-    echo "========================================================================\n"
-    echo "|   The pangolin library install script has completed its execution.   |\n"
-    echo "========================================================================"
+    printf "========================================================================\n"
+    printf "|   The pangolin library install script has completed its execution.   |\n"
+    printf "========================================================================"
 }
 
 install_pypi_packages () {
@@ -99,9 +99,9 @@ install_pypi_packages () {
     pysdl2                          \
     pysdl2-dll
 
-    echo "========================================================================\n"
-    echo "|   The PyPI packages install script has completed its execution.      |\n"
-    echo "========================================================================"
+    printf "========================================================================\n"
+    printf "|   The PyPI packages install script has completed its execution.      |\n"
+    printf "========================================================================"
 }
 
 install_all () {
@@ -111,10 +111,10 @@ install_all () {
 }
 
 print_help () {
-    echo -n "The following script arguments are supported:"
-    echo -n "-\tpypi-packages\t\tInstall dependencies available on PyPI"
-    echo -n "-\tg2o-library\t\tInstall g2o library from its git repo"
-    echo -n "-\tpangolin-library\t\tInstall pangolin library from its git repo"
+    printf "The following script arguments are supported:\n"
+    printf "-\tpypi-packages\t\tInstall dependencies available on PyPI\n"
+    printf "-\tg2o-library\t\tInstall g2o library from its git repo\n"
+    printf "-\tpangolin-library\t\tInstall pangolin library from its git repo\n"
 }
 
 case $1 in
