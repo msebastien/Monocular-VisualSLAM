@@ -4,9 +4,8 @@
 IS_VENV_INITIALIZED=false
 
 # Checks if there is a python virtual environment and activate it
-check_python_venv() 
-{
-    if [ -d $1/.venv ]; then
+check_python_venv () {
+    if [ -d "$1"/.venv ]; then
         echo "A Python virtual environment has already been created. Activate it."
     else
         echo "No Python virtual environment. A new one will be created."
@@ -14,13 +13,12 @@ check_python_venv()
     fi
 
     if [[ "$IS_VENV_INITIALIZED" == false ]]; then
-        source .venv/bin/activate
-        $IS_VENV_INITIALIZED=true
+        source "$1"/.venv/bin/activate
+        IS_VENV_INITIALIZED=true
     fi
 }
 
-install_g2o() 
-{
+install_g2o () {
     cd $HOME
     echo "==> Start running g2o-python library install script..."
 
@@ -29,7 +27,7 @@ install_g2o()
 
     # Clone 'pymem' branch from g2o github repo
     git clone https://github.com/RainerKuemmerle/g2o.git
-    cd g2o
+    cd g2o || exit
     git fetch --all
     git checkout pymem
     cd $HOME
@@ -38,31 +36,30 @@ install_g2o()
     cp -R -t g2o-python/g2o g2o/*
 
     # Set the current directory to the Monocular-VisualSLAM repo
-    cd Monocular-VisualSLAM
+    cd Monocular-VisualSLAM || exit
 
     check_python_venv "$(pwd)"
 
     # Install g2o-python
-    python3 -m pip install -U -v $HOME/g2o-python/
+    python3 -m pip install -U -v "$HOME"/g2o-python/
 
     # Clean git repos
-    rm -rf $HOME/g2o
-    rm -rf $HOME/g2o-python
+    rm -rf "$HOME"/g2o
+    rm -rf "$HOME"/g2o-python
 
     echo "==========================================================================\n"
     echo "|   The g2o-python library install script has completed its execution.   |\n"
     echo "=========================================================================="
 }
 
-install_pangolin() 
-{
+install_pangolin () {
     cd $HOME
     echo "==> Start running pangolin vizualisation library install script..."
 
     git clone https://github.com/uoip/pangolin.git
     
     # Create build directory
-    cd pangolin
+    cd pangolin || exit
     mkdir build
 
     # Generate the Makefile using CMake then
@@ -73,24 +70,23 @@ install_pangolin()
     cd $HOME
 
     # Set the current directory to the Monocular-VisualSLAM repo
-    cd Monocular-VisualSLAM
+    cd Monocular-VisualSLAM || exit
 
     check_python_venv "$(pwd)"
 
     # Install library
-    python3 $HOME/pangolin/setup.py install
+    python3 "$HOME"/pangolin/setup.py install
 
     # Clean git repo and build files
-    rm -rf $HOME/pangolin
+    rm -rf "$HOME"/pangolin
 
     echo "========================================================================\n"
     echo "|   The pangolin library install script has completed its execution.   |\n"
     echo "========================================================================"
 }
 
-install_pypi_packages()
-{
-    cd $HOME/Monocular-VisualSLAM
+install_pypi_packages () {
+    cd "$HOME"/Monocular-VisualSLAM || exit
     check_python_venv "$(pwd)"
 
     python3 -m pip install -U -v    \
@@ -108,15 +104,13 @@ install_pypi_packages()
     echo "========================================================================"
 }
 
-install_all() 
-{
-    install_pypi_packages()
-    install_g2o()
-    install_pangolin()
+install_all () {
+    install_pypi_packages
+    install_g2o
+    install_pangolin
 }
 
-print_help() 
-{
+print_help () {
     echo -n "The following script arguments are supported:"
     echo -n "-\tpypi-packages\t\tInstall dependencies available on PyPI"
     echo -n "-\tg2o-library\t\tInstall g2o library from its git repo"
@@ -127,29 +121,29 @@ case $1 in
 
     pypi-packages)
         echo -n "Installing Python dependencies available on PyPI"
-        install_pypi_packages()
+        install_pypi_packages
         ;;
 
     g2o-library)
         echo -n "Installing g2o python library by cloning its github repo"
-        install_g2o()
+        install_g2o
         ;;
 
     pangolin-library)
         echo -n "Installing pangolin python library by cloning its github repo"
-        install_pangolin()
+        install_pangolin
         ;;
     
     all)
         echo -n "Installing all dependencies from all sources"
-        install_all()
+        install_all
         ;;
 
     help | -h | -help)
-        print_help()
+        print_help
         ;;
 
     *)
-        print_help()
+        print_help
         ;;
 esac
