@@ -47,9 +47,9 @@ install_g2o () {
     rm -rf "$HOME"/g2o
     rm -rf "$HOME"/g2o-python
 
-    printf "==========================================================================\n"
-    printf "|   The g2o-python library install script has completed its execution.   |\n"
-    printf "=========================================================================="
+    echo -n "=========================================================================="
+    echo -n "|   The g2o-python library install script has completed its execution.   |"
+    echo -n "=========================================================================="
 }
 
 install_pangolin () {
@@ -80,9 +80,9 @@ install_pangolin () {
     # Clean git repo and build files
     rm -rf "$HOME"/pangolin
 
-    printf "========================================================================\n"
-    printf "|   The pangolin library install script has completed its execution.   |\n"
-    printf "========================================================================"
+    echo -n "========================================================================"
+    echo -n "|   The pangolin library install script has completed its execution.   |"
+    echo -n "========================================================================"
 }
 
 install_pypi_packages () {
@@ -99,9 +99,9 @@ install_pypi_packages () {
     pysdl2                          \
     pysdl2-dll
 
-    printf "========================================================================\n"
-    printf "|   The PyPI packages install script has completed its execution.      |\n"
-    printf "========================================================================"
+    echo -n "========================================================================"
+    echo -n "|   The PyPI packages install script has completed its execution.      |"
+    echo -n "========================================================================"
 }
 
 install_all () {
@@ -111,31 +111,31 @@ install_all () {
 }
 
 print_help () {
-    printf "The following script arguments are supported:\n"
-    printf "-\tpypi-packages\t\tInstall dependencies available on PyPI\n"
-    printf "-\tg2o-library\t\tInstall g2o library from its git repo\n"
-    printf "-\tpangolin-library\t\tInstall pangolin library from its git repo\n"
+    echo -e "The following script arguments are supported:\n"
+    echo -e "-\tpypi-packages\t\tInstall dependencies available on PyPI\n"
+    echo -e "-\tg2o-library\t\tInstall g2o library from its git repo\n"
+    echo -e "-\tpangolin-library\t\tInstall pangolin library from its git repo\n"
 }
 
 case $1 in
 
     pypi-packages)
-        echo -n "Installing Python dependencies available on PyPI"
+        echo -n "Installing Python dependencies available on PyPI..."
         install_pypi_packages
         ;;
 
     g2o-library)
-        echo -n "Installing g2o python library by cloning its github repo"
+        echo -n "Installing g2o python library by cloning its github repo..."
         install_g2o
         ;;
 
     pangolin-library)
-        echo -n "Installing pangolin python library by cloning its github repo"
+        echo -n "Installing pangolin python library by cloning its github repo..."
         install_pangolin
         ;;
     
     all)
-        echo -n "Installing all dependencies from all sources"
+        echo -n "Installing all dependencies from all sources..."
         install_all
         ;;
 
