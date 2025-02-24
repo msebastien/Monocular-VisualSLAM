@@ -5,7 +5,10 @@ opencv-contrib-python
 
 numpy
 scikit-image
-pangolin-tool
+
+# This package does not work. 
+# Use the provided install script instead.
+#pangolin-tool
 
 # OpenGL
 pyopengl
