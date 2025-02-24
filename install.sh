@@ -112,6 +112,7 @@ install_all () {
 
 print_help () {
     echo -e "The following script arguments are supported:\n"
+    echo -e "- all\tInstall all dependencies for this project to work.\n"
     echo -e "- pypi-packages\tInstall dependencies available on PyPI.\n"
     echo -e "- g2o-library\tInstall g2o library from its git repo.\n"
     echo -e "- pangolin-library\tInstall pangolin library from its git repo.\n"
