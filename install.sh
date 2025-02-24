@@ -56,35 +56,27 @@ install_pangolin () {
     cd $HOME
     echo -n "==> Start running pangolin vizualisation library install script..."
 
-    git clone https://github.com/uoip/pangolin.git
+    check_python_venv "$HOME/Monocular-VisualSLAM"
+    echo -n "Current Python executable: $(which python3)"
+
+    git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
     
     # Set current directory to the cloned repo
-    cd pangolin || exit
+    cd Pangolin || exit
 
-    # Replace setup file with the fixed one
-    rm -f setup.py
-    cp "$HOME"/Monocular-VisualSLAM/pangolin/setup.py .
+    # Install dependencies
+    ./scripts/install_prerequisites.sh recommended
 
-    # Create build directory
-    mkdir build
-
-    # Generate the Makefile using CMake then
-    # build the library using Make and the generated Makefile
-    cd build
-    cmake ..
-    make -j8
-    cd $HOME
+    # Configure and build
+    cmake -B build -GNinja -DPython3_EXECUTABLE="$(which python3)"
+    # GIVEME THE PYTHON STUFF!!! (Check the output to verify selected python version)
+    cmake --build build -t pypangolin_pip_install
 
     # Set the current directory to the Monocular-VisualSLAM repo
-    cd Monocular-VisualSLAM || exit
-
-    check_python_venv "$(pwd)"
-
-    # Install library
-    python3 -m pip install "$HOME"/pangolin
+    cd $HOME/Monocular-VisualSLAM || exit
 
     # Clean git repo and build files
-    rm -rf "$HOME"/pangolin
+    rm -rf "$HOME"/Pangolin
 
     echo -n "========================================================================"
     echo -n "|   The pangolin library install script has completed its execution.   |"
