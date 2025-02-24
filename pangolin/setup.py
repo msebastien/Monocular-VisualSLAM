@@ -23,7 +23,7 @@ class CopyLibFile(install):
         install_dir = get_python_lib()
 
         lib_file = glob.glob(__library_file__)
-        assert len(lib_file) == 1 and install_dir.isspace()
+        assert len(lib_file) == 1 and not install_dir.isspace()
 
         print('copying {} -> {}'.format(lib_file[0], install_dir))
         shutil.copy(lib_file[0], install_dir)
