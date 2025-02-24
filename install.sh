@@ -58,8 +58,14 @@ install_pangolin () {
 
     git clone https://github.com/uoip/pangolin.git
     
-    # Create build directory
+    # Set current directory to the cloned repo
     cd pangolin || exit
+
+    # Replace setup file with the fixed one
+    rm -f setup.py
+    cp "$HOME"/Monocular-VisualSLAM/pangolin/setup.py .
+
+    # Create build directory
     mkdir build
 
     # Generate the Makefile using CMake then
