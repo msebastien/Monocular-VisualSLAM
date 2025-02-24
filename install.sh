@@ -81,7 +81,7 @@ install_pangolin () {
     check_python_venv "$(pwd)"
 
     # Install library
-    python3 "$HOME"/pangolin/setup.py install
+    python3 -m pip install "$HOME"/pangolin
 
     # Clean git repo and build files
     rm -rf "$HOME"/pangolin
