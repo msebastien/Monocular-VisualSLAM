@@ -3,6 +3,9 @@ import numpy as np
 from skimage.measure import ransac
 from skimage.transform import FundamentalMatrixTransform
 
+# Initialize Essential Matrix [R|t] with the Identity matrix
+IRt = np.eye(4)
+
 
 def add_ones(x):
     # creates homonogenous coordinates given the point x
@@ -153,7 +156,7 @@ class Frame(object):
         self.Kinv = np.linalg.inv(self.K)  # Inverse of the Intrinsic Matrix
 
         # Initial pose of the frame (assuming IRt is predefined)
-        # self.pose = IRt
+        self.pose = IRt
 
         # Unique Frame ID based on the current number of frames in the map
         self.id = len(mapp.frames)
