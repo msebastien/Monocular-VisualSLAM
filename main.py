@@ -80,6 +80,10 @@ def process_frame(img):
 
 
 def triangulate(pose1, pose2, pts1, pts2):
+    # The triangulation, used in epipolar geometry, relies
+    # on image correspondences and camera calibration parameters.
+    # It is used to get the 3D world coordinate of a 2D frame point
+    # by projecting the point with the help of projection matrices
     # pose1: Pose matrix in 3D world homogeneous coordinates (Rotation and translation) for frame 1
     # P1 = K[I|0] (intrinsic, and essential matrix for extrinsic parameters)
     # pose2: Pose matrix in 3D world homogeneous coordinates for frame 2
