@@ -148,7 +148,7 @@ def extract_pose(F):
 class Frame(object):
     def __init__(self, mapp, img, K):
         # Intrinsic Matrix (used to determine P, the Camera Matrix)
-        # Camera pose Matrix P = K[R|t], with [R|t] the Extrinsic Matrix
+        # Camera pose Matrix P = K[R|t], with [R|t] the Esssential (or Extrinsic) Matrix
         self.K = K
         self.Kinv = np.linalg.inv(self.K)  # Inverse of the Intrinsic Matrix
 
