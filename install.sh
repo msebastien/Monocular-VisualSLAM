@@ -59,7 +59,7 @@ install_pangolin () {
     check_python_venv "$HOME/Monocular-VisualSLAM"
     echo -n "Current Python executable: $(which python3)"
 
-    git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
+    git clone --recursive https://github.com/stevenlovegrove/Pangolin.git --branch v0.9.2 --single-branch
     
     # Set current directory to the cloned repo
     cd Pangolin || exit
@@ -68,7 +68,8 @@ install_pangolin () {
     ./scripts/install_prerequisites.sh recommended
 
     # Configure and build
-    cmake -B build -GNinja -DPython3_EXECUTABLE="$(which python3)"
+    cmake -B build -GNinja -DPython3_EXECUTABLE="$(which python3)" -DPython_EXECUTABLE="$(which python3)"
+    cmake --build build
     cmake --build build -t pypangolin_wheel
     cmake --build build -t pypangolin_pip_install
 
