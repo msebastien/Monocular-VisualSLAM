@@ -70,14 +70,10 @@ install_pangolin () {
     # Configure and build
     cmake -B build -GNinja -DPython3_EXECUTABLE="$(which python3)" -DPython_EXECUTABLE="$(which python3)"
     cmake --build build
-    cmake --build build -t pypangolin_wheel
     cmake --build build -t pypangolin_pip_install
 
     # Set the current directory to the Monocular-VisualSLAM repo
     cd $HOME/Monocular-VisualSLAM || exit
-
-    # Clean git repo and build files
-    rm -rf "$HOME"/Pangolin
 
     echo -n "========================================================================"
     echo -n "|   The pangolin library install script has completed its execution.   |"
