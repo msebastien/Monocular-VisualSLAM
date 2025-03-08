@@ -5,7 +5,7 @@
 VERSION=0.14.0
 
 # Download and extract the tarball (tar requires superuser privileges)
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v${VERSION}.tar.gz | tar xvz -C /usr/src
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v${VERSION}.tar.gz | sudo tar xvz -C /usr/src
 
 # Install kernel module using DKMS
 sudo dkms add -m v4l2loopback -v ${VERSION}
