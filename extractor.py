@@ -9,7 +9,7 @@ IRt = np.eye(4)
 
 def add_ones(x):
     # creates homonogenous coordinates given the point x
-    return np.concatenate([x, np.ones(x.shape[0], 1)], axis=1)
+    return np.concatenate([x, np.ones((x.shape[0], 1))], axis=1)
 
 
 def normalize_points(Kinv, pts):
@@ -43,7 +43,7 @@ def extract(img):
     kps = [cv2.KeyPoint(f[0][0], f[0][1], 20) for f in pts]
     kps, des = orb.compute(img, kps)
 
-    return np.array([(kp.pt[0], kp.pt[1]) for kp in kps])
+    return np.array([(kp.pt[0], kp.pt[1]) for kp in kps]), des
 
 
 def match_frames(f1, f2):
