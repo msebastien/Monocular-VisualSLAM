@@ -23,7 +23,7 @@ class Map(object):
 
         # initializes the Parallel process with the `viewer_thread` function
         # the arguments that the function takes is mentioned in the args var
-        p = Process(target=self.viewer_thread, args=(self.q))
+        p = Process(target=self.viewer_thread, args=(self.q,))
 
         # daemon true means, exit when main program stops
         p.daemon = True
@@ -76,7 +76,7 @@ class Map(object):
             #  the 'up' direction being downwards in the y-axis, which is
             #  unconventional and might be used to achieve a specific
             #  orientation or perspective in the rendered scene.
-            pango.ModelViewLookAt(0, -10, -8, 0, 0, 0, 0, -1, 0),
+            pango.ModelViewLookAt(0, -10, -8, 0, 0, 0, 0, -1, 0)
         )
         # Creates a handler for 3D interaction
         self.handler = pango.Handler3D(self.scam)
@@ -84,7 +84,14 @@ class Map(object):
         # Creates a display context
         self.dcam = pango.CreateDisplay()
         # Sets the bounds of the display
-        self.dcam.SetBounds(0.0, 1.0, 0.0, 1.0, -width / height)
+        self.dcam.SetBounds
+        (
+            pango.Attach(0),
+            pango.Attach(1),
+            pango.Attach(0),
+            pango.Attach(1),
+            float(-width) / float(height)
+        )
         # Assigns handler for mouse clicking and stuff, interactive
         self.dcam.SetHandler(self.handler)
         self.darr = None
