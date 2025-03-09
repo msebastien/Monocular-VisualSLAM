@@ -136,7 +136,8 @@ def triangulate(pose1, pose2, pts1, pts2):
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+    cap = cv2.VideoCapture("videos/car.mp4")
 
     while cap.isOpened():
         ret, frame = cap.read()
