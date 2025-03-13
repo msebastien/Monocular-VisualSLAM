@@ -4,6 +4,7 @@ import numpy as np
 import pypangolin as pango
 import OpenGL.GL as gl
 
+from utils import draw_cameras, draw_points
 
 # Global map // 3D visualization using pangolin
 class Map(object):
@@ -35,12 +36,12 @@ class Map(object):
         # The viewer thread takes the queue as input
         # Initializes the vizualisation window
         self.viewer_init(1280, 720)
-        # An infinite loop that continually refreshes the viewer
-        while True:
+        # A loop that continually refreshes the viewer
+        while not pango.ShouldQuit():
             self.viewer_refresh(queue)
 
     def viewer_init(self, width, height):
-        pango.CreateWindowAndBind("Main", width, height)
+        pango.CreateWindowAndBind("Point Cloud", width, height)
 
         # This ensures that only the nearest objects are rendered,
         # creating a realistic representation of the scene with
@@ -76,7 +77,7 @@ class Map(object):
             #  the 'up' direction being downwards in the y-axis, which is
             #  unconventional and might be used to achieve a specific
             #  orientation or perspective in the rendered scene.
-            pango.ModelViewLookAt(0, -10, -8, 0, 0, 0, 0, -1, 0)
+            pango.ModelViewLookAt(0, -10, -8, 0, 0, 0, 0, -1, 0),
         )
         # Creates a handler for 3D interaction
         self.handler = pango.Handler3D(self.scam)
@@ -86,15 +87,14 @@ class Map(object):
         # Sets the bounds of the display
         self.dcam.SetBounds
         (
-            pango.Attach(0),
-            pango.Attach(1),
-            pango.Attach(0),
-            pango.Attach(1),
-            float(-width) / float(height)
+            pango.Attach(0.0),
+            pango.Attach(1.0),
+            pango.Attach(0.0),
+            pango.Attach(1.0),
+            -float(width) / float(height),
         )
         # Assigns handler for mouse clicking and stuff, interactive
         self.dcam.SetHandler(self.handler)
-        self.darr = None
 
     def viewer_refresh(self, queue):
         #  Checks of the current state is None or if the queue is not empty
@@ -112,18 +112,20 @@ class Map(object):
         #  Camera trajectory line and color setup
         gl.glLineWidth(1)
         gl.glColor3f(0.0, 1.0, 0.0)
-        pango.DrawCameras(self.state[0])
+        #pango.DrawCameras(self.state[0])
+        draw_cameras(self.state[0])
 
         #  3D point cloud color setup
         gl.glPointSize(2)
         gl.glColor3f(1.0, 0.0, 0.0)
-        pango.DrawPoints(self.state[1])
+        #pango.DrawPoints(self.state[1])
+        draw_points(self.state[1])
 
         #  Finishes the current frame and swaps the buffers.
         pango.FinishFrame()
 
     def display(self):
-        if self.queue is None:
+        if self.q is None:
             return
 
         poses, pts = [], []
@@ -135,8 +137,8 @@ class Map(object):
             #  Updating map points
             pts.append(p.pt)
 
-        #  Updating the queue
-        self.queue.put((np.array(poses), np.array(pts)))
+        #  Updating the queue with a new state
+        self.q.put((np.array(poses), np.array(pts)))
 
 
 class Point(object):
