@@ -73,7 +73,7 @@ def process_frame(img):
         cv2.line(img, (u1, v1), (u2, v2), (255, 0, 0))
 
     # 2D display
-    display.paint()
+    display.paint(img)
 
     # 3D display
     mapp.display()
@@ -136,8 +136,9 @@ def triangulate(pose1, pose2, pts1, pts2):
 
 
 if __name__ == "__main__":
-    #cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
-    cap = cv2.VideoCapture("videos/car.mp4")
+    # cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("/dev/video0")
+    #cap = cv2.VideoCapture("videos/car.mp4")
 
     while cap.isOpened():
         ret, frame = cap.read()
