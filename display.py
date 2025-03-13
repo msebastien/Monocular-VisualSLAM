@@ -6,7 +6,7 @@ import cv2
 class Display(object):
     def __init__(self, W, H):
         sdl2.ext.init()
-        self.window = sdl2.ext.Window("Monocular Visual SLAM", size=(W, H))
+        self.window = sdl2.ext.Window("Video", size=(W, H))
         self.window.show()
         self.W, self.H = W, H
 
