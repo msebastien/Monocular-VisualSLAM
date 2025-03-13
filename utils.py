@@ -1,6 +1,42 @@
 import OpenGL.GL as gl
 
 
+def read_file(path):
+    with open(path, "r") as f:
+        lines = f.readlines()
+    return lines
+
+
+def parse_camera_intrinsics(path, camera_id="P0"):
+    param_lines = read_file(path)
+
+    f, cx, cy = 0
+    for line in param_lines:
+        # Ignore comments
+        if line.startswith("#"):
+            break
+        
+        if line.startswith(camera_id):
+            # Split the line and convert to float
+            values = line.strip().split()
+
+            match values[0]:
+                case "f":
+                    f = float(values[1])
+                case "cx":
+                    cx = float(values[1])
+                case "cy":
+                    cy = float(values[1])
+                case "rx":
+                    cx = float(values[1]) // 2
+                case "ry":
+                    cy = float(values[1]) // 2
+                case _:
+                    print("Unknown camera intrinsic parameter")
+
+    return f, cx, cy
+
+
 def draw_points(points):
     """
     points: an array of point. Each point = 3 components
