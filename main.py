@@ -3,13 +3,19 @@ import numpy as np
 from display import Display
 from pointmap import Map, Point
 from extractor import Frame, add_ones, match_frames, denormalize_point
+from utils import parse_camera_intrinsics
 
-### Camera intrinsics
+### Default Camera intrinsics
 # Define principal point offset or optical center coordinates
-W, H = 1920 // 2, 1080 // 2
-
+W, H = 1920 // 2, 1080 // 2  # Cx and Cy
 # Define focus length
 F = 270
+
+# Load custom intrinsic parameters
+f, cx, cy = parse_camera_intrinsics("camera_intrinsics.txt")
+F = f if f > 0 else F
+W = cx if cx > 0 else W
+H = cy if cy > 0 else H
 
 # Define Intrinsic Matrix and inverse of that
 K = np.array([[F, 0, W // 2], [0, F, H // 2], [0, 0, 1]])
