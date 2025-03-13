@@ -31,17 +31,24 @@ def extract(img):
     # then, computes ORB descriptors
     orb = cv2.ORB.create()
 
+    # Convert to grayscale
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
     # Detection
     pts = cv2.goodFeaturesToTrack(
-        np.mean(img, axis=-1).astype(np.uint8),
+        #np.mean(img, axis=1).astype(np.uint8)
+        gray_img,
         maxCorners=1000,
         qualityLevel=0.01,
         minDistance=10,
     )
 
+    if pts is None:
+        return np.array([]), None
+
     # Extraction
     kps = [cv2.KeyPoint(f[0][0], f[0][1], 20) for f in pts]
-    kps, des = orb.compute(img, kps)
+    kps, des = orb.compute(gray_img, kps)
 
     return np.array([(kp.pt[0], kp.pt[1]) for kp in kps]), des
 
@@ -77,9 +84,8 @@ def match_frames(f1, f2):
     # Fit matrix
     # Compute the Fundamental Matrix using RANSAC
     model, inliers = ransac(
-        ret[:, 0],
-        ret[:, 1],
-        FundamentalMatrixTransform,
+        data=(ret[:, 0], ret[:, 1]),
+        model_class=FundamentalMatrixTransform,
         min_samples=8,
         residual_threshold=0.005,
         max_trials=200,
@@ -112,7 +118,7 @@ def match_frames(f1, f2):
 
 def extract_pose(F):
     # Define the W matrix for computing the Rotation matrix
-    W = np.mat([0, -1, 0], [1, 0, 0], [0, 0, 1])
+    W = np.asmatrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
 
     # Perform Singular Value Decomposition (SVD) on the Fundamental matrix F
     U, d, Vt = np.linalg.svd(F)
@@ -160,9 +166,11 @@ class Frame(object):
 
         # Unique Frame ID based on the current number of frames in the map
         self.id = len(mapp.frames)
+        mapp.frames.append(self)
 
         # Extract feature points and descriptors from the image
         pts, self.des = extract(img)
 
         # Normalize the feature points using the inverse camera matrix
-        self.pts = normalize_points(self.Kinv, pts)
+        if self.des.any() is not None:
+            self.pts = normalize_points(self.Kinv, pts)
