@@ -6,23 +6,24 @@ from extractor import Frame, add_ones, match_frames, denormalize_point
 from utils import parse_camera_intrinsics
 
 ### Default Camera intrinsics
-# Define principal point offset or optical center coordinates
+# Define default principal point offset or optical center coordinates
 W, H = 1920 // 2, 1080 // 2  # Cx and Cy
-# Define focus length
+# Define default focus length
 F = 270
 
 # Load custom intrinsic parameters
-f, cx, cy = parse_camera_intrinsics("camera_intrinsics.txt")
-F = f if f > 0 else F
-W = cx if cx > 0 else W
-H = cy if cy > 0 else H
+focal, center_x, center_y = parse_camera_intrinsics("camera_intrinsics.txt")
+f = focal if focal > 0 else F
+cx = center_x if center_x > 0 else W
+cy = center_y if center_y > 0 else H
+print(f"Camera Intrinsic parameters: F={f} | Cx={cx} | Cy={cy}\n")
 
 # Define Intrinsic Matrix and inverse of that
-K = np.array([[F, 0, W // 2], [0, F, H // 2], [0, 0, 1]])
+K = np.array([[f, 0, cx // 2], [0, f, cy // 2], [0, 0, 1]])
 Kinv = np.linalg.inv(K)
 
 # Image display initialization
-display = Display(W, H)
+display = Display(cx, cy)
 
 # Initialize a map
 mapp = Map()
@@ -30,7 +31,7 @@ mapp.create_viewer()
 
 
 def process_frame(img):
-    img = cv2.resize(img, (W, H))
+    img = cv2.resize(img, (cx, cy))
     frame = Frame(mapp, img, K)
     if frame.id == 0:
         return
@@ -145,7 +146,7 @@ def triangulate(pose1, pose2, pts1, pts2):
 
 if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
-    #cap = cv2.VideoCapture("videos/car.mp4")
+    # cap = cv2.VideoCapture("videos/car.mp4")
 
     while cap.isOpened():
         ret, frame = cap.read()

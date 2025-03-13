@@ -97,7 +97,7 @@ def match_frames(f1, f2):
             max_trials=600,
         )
         F = model.params
-    except ValueError:
+    except (ValueError, AttributeError):
         return np.array([]), np.array([]), np.array([])
 
     # Ignore outliers

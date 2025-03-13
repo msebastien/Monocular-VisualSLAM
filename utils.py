@@ -10,29 +10,50 @@ def read_file(path):
 def parse_camera_intrinsics(path, camera_id="P0"):
     param_lines = read_file(path)
 
+    id = ""
     f, cx, cy = 0, 0, 0
-    for line in param_lines:
+    for i, line in enumerate(param_lines):
         # Ignore comments
         if line.startswith("#"):
-            break
+            continue
 
-        if line.startswith(camera_id):
-            # Split the line and convert to float
+        if line.startswith("id"):
             values = line.strip().split()
+            # Check if a camera id is provided
+            if not len(values) > 1:
+                continue
 
-            match values[0]:
-                case "f":
-                    f = float(values[1])
-                case "cx":
-                    cx = float(values[1])
-                case "cy":
-                    cy = float(values[1])
-                case "rx":
-                    cx = float(values[1]) // 2
-                case "ry":
-                    cy = float(values[1]) // 2
-                case _:
-                    print("Unknown camera intrinsic parameter")
+            id = values[1]
+
+            if id == camera_id:
+                j = i + 1
+                while j < len(param_lines) and not param_lines[j].startswith("id"):
+                    # Split the line
+                    values = param_lines[j].strip().split()
+                    # Check if a value is specified after the parameter name
+                    if not len(values) > 1:
+                        continue
+
+                    # Retrieve value and convert to int
+                    match values[0]:
+                        case "f":
+                            f = int(values[1])
+                            print("Found Focal Distance F\n")
+                        case "cx":
+                            cx = int(values[1])
+                            print("Found Optical Center/Principal Point offset Cx\n")
+                        case "cy":
+                            cy = int(values[1])
+                            print("Found Optical Center/Principal Point offset Cy\n")
+                        case "rx":
+                            cx = int(values[1]) // 2
+                            print("Cx deduced from the camera resolution Rx\n")
+                        case "ry":
+                            cy = int(values[1]) // 2
+                            print("Cy deduced from the camera resolution Ry\n")
+                        case _:
+                            print(f"'{values[0]}': No/Unknown camera intrinsic parameter\n")
+                    j = j + 1
 
     return f, cx, cy
 

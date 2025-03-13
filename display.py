@@ -4,14 +4,14 @@ import cv2
 
 
 class Display(object):
-    def __init__(self, W, H):
+    def __init__(self, width, height):
         sdl2.ext.init()
-        self.window = sdl2.ext.Window("Video", size=(W, H))
+        self.window = sdl2.ext.Window("Video", size=(width, height))
         self.window.show()
-        self.W, self.H = W, H
+        self.width, self.height = width, height
 
     def paint(self, img):
-        img = cv2.resize(img, (self.W, self.H))
+        img = cv2.resize(img, (self.width, self.height))
 
         # Retrieves a list of SDL2 events currently in the event queue
         events = sdl2.ext.get_events()
