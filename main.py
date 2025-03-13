@@ -40,6 +40,8 @@ def process_frame(img):
     f2 = mapp.frames[-2]
 
     idx1, idx2, Rt = match_frames(f1, f2)
+    if len(idx1) == 0:
+        return
 
     # X_f1 = E * X_f2, f2 is in world coordinate frame, multiplying that with
     # [R|t] (Essential matrix) transforms the f2 pose with respect to the f1 coordinate frame

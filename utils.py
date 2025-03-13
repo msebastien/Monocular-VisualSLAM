@@ -10,12 +10,12 @@ def read_file(path):
 def parse_camera_intrinsics(path, camera_id="P0"):
     param_lines = read_file(path)
 
-    f, cx, cy = 0
+    f, cx, cy = 0, 0, 0
     for line in param_lines:
         # Ignore comments
         if line.startswith("#"):
             break
-        
+
         if line.startswith(camera_id):
             # Split the line and convert to float
             values = line.strip().split()

@@ -36,7 +36,7 @@ def extract(img):
 
     # Detection
     pts = cv2.goodFeaturesToTrack(
-        #np.mean(img, axis=1).astype(np.uint8)
+        # np.mean(img, axis=1).astype(np.uint8)
         gray_img,
         maxCorners=1000,
         qualityLevel=0.01,
@@ -76,21 +76,29 @@ def match_frames(f1, f2):
                 idx2.append(m.trainIdx)
                 ret.append((p1, p2))
 
-    assert len(ret) >= 8  # should have at least 8 matches between 2 frames
+    # should have at least 8 matches between 2 frames
+    # assert len(ret) >= 8
+    if not len(ret) >= 8:
+        return np.array([]), np.array([]), np.array([])
+
     ret = np.array(ret)
     idx1 = np.array(idx1)
     idx2 = np.array(idx2)
 
     # Fit matrix
     # Compute the Fundamental Matrix using RANSAC
-    model, inliers = ransac(
-        data=(ret[:, 0], ret[:, 1]),
-        model_class=FundamentalMatrixTransform,
-        min_samples=8,
-        residual_threshold=0.005,
-        max_trials=200,
-    )
-    F = model.params
+    try:
+        model, inliers = ransac(
+            data=(ret[:, 0], ret[:, 1]),
+            model_class=FundamentalMatrixTransform,
+            min_samples=8,
+            residual_threshold=0.005,
+            #max_trials=200,
+            max_trials=600,
+        )
+        F = model.params
+    except ValueError:
+        return np.array([]), np.array([]), np.array([])
 
     # Ignore outliers
     ret = ret[inliers]
@@ -172,5 +180,5 @@ class Frame(object):
         pts, self.des = extract(img)
 
         # Normalize the feature points using the inverse camera matrix
-        if self.des.any() is not None:
+        if self.des is not None and self.des.any() is not None:
             self.pts = normalize_points(self.Kinv, pts)

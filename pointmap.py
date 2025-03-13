@@ -6,6 +6,7 @@ import OpenGL.GL as gl
 
 from utils import draw_cameras, draw_points
 
+
 # Global map // 3D visualization using pangolin
 class Map(object):
     def __init__(self):
@@ -112,13 +113,13 @@ class Map(object):
         #  Camera trajectory line and color setup
         gl.glLineWidth(1)
         gl.glColor3f(0.0, 1.0, 0.0)
-        #pango.DrawCameras(self.state[0])
+        # pango.DrawCameras(self.state[0])
         draw_cameras(self.state[0])
 
         #  3D point cloud color setup
         gl.glPointSize(2)
         gl.glColor3f(1.0, 0.0, 0.0)
-        #pango.DrawPoints(self.state[1])
+        # pango.DrawPoints(self.state[1])
         draw_points(self.state[1])
 
         #  Finishes the current frame and swaps the buffers.
