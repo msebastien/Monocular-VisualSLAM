@@ -2,6 +2,8 @@
 # Written by Sébastien Maes
 
 IS_VENV_INITIALIZED=false
+PROJECT_DIRECTORY_NAME=Monocular-VisualSLAM
+PROJECT_PATH=$(find "$HOME" -type d -name $PROJECT_DIRECTORY_NAME)
 
 # Checks if there is a python virtual environment and activate it
 check_python_venv () {
@@ -36,7 +38,7 @@ install_g2o () {
     cp -R -t g2o-python/g2o g2o/*
 
     # Set the current directory to the Monocular-VisualSLAM repo
-    cd Monocular-VisualSLAM || exit
+    cd "$PROJECT_PATH" || exit
 
     check_python_venv "$(pwd)"
 
@@ -45,7 +47,7 @@ install_g2o () {
 
     # Clean git repos
     rm -rf "$HOME"/g2o
-    rm -rf "$HOME"/g2o-python
+    #rm -rf "$HOME"/g2o-python
 
     echo -n "=========================================================================="
     echo -n "|   The g2o-python library install script has completed its execution.   |"
@@ -56,7 +58,7 @@ install_pangolin () {
     cd $HOME
     echo -n "==> Start running pangolin vizualisation library install script..."
 
-    check_python_venv "$HOME/Monocular-VisualSLAM"
+    check_python_venv "$PROJECT_PATH"
     echo -n "Current Python executable: $(which python3)"
 
     git clone --recursive https://github.com/stevenlovegrove/Pangolin.git --branch v0.9.2 --single-branch
@@ -73,7 +75,7 @@ install_pangolin () {
     cmake --build build -t pypangolin_pip_install
 
     # Set the current directory to the Monocular-VisualSLAM repo
-    cd $HOME/Monocular-VisualSLAM || exit
+    cd "$PROJECT_PATH" || exit
 
     echo -n "========================================================================"
     echo -n "|   The pangolin library install script has completed its execution.   |"
@@ -81,7 +83,7 @@ install_pangolin () {
 }
 
 install_pypi_packages () {
-    cd "$HOME"/Monocular-VisualSLAM || exit
+    cd "$PROJECT_PATH" || exit
     check_python_venv "$(pwd)"
 
     python3 -m pip install -U -v    \
